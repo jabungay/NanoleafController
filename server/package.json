@@ -1,0 +1,19 @@
+{
+  "name": "nanoleaf-clone-webserver",
+  "version": "0.1.0",
+  "description": "A webpage used to control Nanoleaf clones",
+  "main": "server.js",
+  "scripts": {
+    "start": "npx pm2 start server.js --watch"
+  },
+  "author": "Jonathan Bungay",
+  "license": "",
+  "dependencies": {
+    "express": "^4.16.3",
+    "pug": "^2.0.3",
+    "arest" : "^0.3.0"
+  },
+  "devDependencies": {
+    "pm2": "^2.10.3"
+  }
+}
