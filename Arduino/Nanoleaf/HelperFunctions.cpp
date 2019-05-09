@@ -15,9 +15,4 @@ void seperateData(String data, String* arr, int arrLen) {
   // Add the final argument
   arr[arguments] = data.substring(lastSep + 1, data.length());
 
-  // DEBUG: print all arguments
-  for(int i = 0; i < arrLen; i++) {
-    Serial.println(arr[i]);  
-  }
-  
 }
