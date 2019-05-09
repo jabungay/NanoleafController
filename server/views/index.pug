@@ -1,33 +1,20 @@
-html
-  head
-    title #{title}
-    link(rel='stylesheet', href='/css/style.css')
-    meta(name="viewport" content="width=device-width, initial-scale=1")
-    script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript')
-  body
-    h1 LED Testing
-    div
-      button(onclick="getTest('R,on')") Red On
-      button(onclick="getTest('R,off')") Red Off
-    div
-      button(onclick="getTest('G,on')") Green On
-      button(onclick="getTest('G,off')") Green Off    
-    div
-      button(onclick="getTest('B,on')") Blue On
-      button(onclick="getTest('B,off')") Blue Off 
-    div
-      input(type='range' min='0' max = '1023' value = '512' id = 'brightnessRange')
-    
-    div
-      p R: 
-      input(type="text" id="RVal")
-      p G: 
-      input(type="text" id="GVal")
-      p B: 
-      input(type="text" id = "BVal")
-      button(onclick="setColour()") Set Colour
+extends default.pug
 
-script(src='/js/interface.js')
-
-
-    
+block content
+  div.main
+    a(href="/nanoleaf1")
+      div.nanoleaf.wrapper
+        div.nanoleaf.top
+          | Nanoleaf 1
+          p.nanoleaf.arrow >
+        div.nanoleaf.bottom
+          | Real information
+    a(href="/nanoleaf2")
+      div.nanoleaf.wrapper
+        div.nanoleaf.top
+          | Nanoleaf 2
+          p.nanoleaf.arrow >
+        div.nanoleaf.bottom
+          | Real information
+    a(href="/add")
+      div.nanoleaf.button Add Device
