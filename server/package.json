@@ -10,6 +10,7 @@
   "license": "",
   "dependencies": {
     "express": "^4.16.3",
+    "express-validator": "^5.3.1",
     "pug": "^2.0.3",
     "arest" : "^0.3.0"
   },
