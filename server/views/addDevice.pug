@@ -1,0 +1,23 @@
+extends default.pug
+
+block content
+  form(action="/submit-device" method="POST")
+    p IP Address:
+    br
+    input(type="text" name="ipaddress")
+    br
+    p Name:
+    br
+    input(type="text" name="name")
+    br
+    input(type="submit" value="Add Device")
+    input#totalDevices(type="hidden" name="devices")
+  
+  svg.triHolder#triHolder( width="100" height="100")
+    
+append endScripts
+  script(src='/js/addDevice.js' type='text/javascript')
+
+  
+      
+    

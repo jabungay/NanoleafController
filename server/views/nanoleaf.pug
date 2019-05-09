@@ -1,0 +1,12 @@
+extends default.pug
+
+block content
+  div.main
+    p Index:
+    input(type="text" id="index")
+    p Color: 
+    input(type="color" id="color")
+
+    button(onclick="setColour()") Set Colour
+    
+    button(onclick="toggleAll()") Toggle Lights
