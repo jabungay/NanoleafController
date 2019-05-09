@@ -14,10 +14,8 @@
 // Import required libraries
 #include "ESP8266WiFi.h"
 #include <aREST.h>
-
+#include "HelperFunctions.h"
 #include "LED.h"
-
-
 
 // Create aREST instance
 aREST rest = aREST();
@@ -32,25 +30,20 @@ WiFiServer server(80);
 
 void setup(void)
 {
-  // Set LED pins as outputs
-  pinMode(R_PIN, OUTPUT);
-  pinMode(G_PIN, OUTPUT);
-  pinMode(B_PIN, OUTPUT);
 
-  // Create LED srtip object
-  // FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEAVES * 6);
+  setupLED();
 
   // Start Serial (debugging purposes)
   Serial.begin(115200);
 
   // Give name and ID to device
   rest.set_id("1");
-  rest.set_name("neoleaf_1");
+  rest.set_name("nanoleaf_1");
 
   // Functions exposed to rest api
-  rest.function("led", ledControl);
-  rest.function("brightness", brightnessControl);
-  rest.function("setColour", colourControl);
+  rest.function("setColour", setColour);
+  rest.function("setBrightness", setBrightness);
+  rest.function("toggleAll", toggleAll);
 
   // Connect to WiFi
   WiFi.begin(ssid, password);
@@ -65,6 +58,10 @@ void setup(void)
   // Print the IP address
   Serial.println(WiFi.localIP());
 
+  for (int i = 0; i < NUM_LEAVES; i++) {
+    setColour("128,128,128," + String(i) + ",1");
+  }
+
 }
 
 void loop() {
@@ -74,7 +71,7 @@ void loop() {
     return;
   }
   while (!client.available()) {
-    delay(1);
+    FastLED.delay(1);
   }
   rest.handle(client);
 }
