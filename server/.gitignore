@@ -2,6 +2,8 @@
 # Created by https://www.gitignore.io/api/node
 # Edit at https://www.gitignore.io/?templates=node
 
+
+
 ### Node ###
 # Logs
 logs
@@ -44,7 +46,6 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
-v8-compile-cache-0
 
 # TypeScript v1 declaration files
 typings/
@@ -90,3 +91,7 @@ typings/
 .dynamodb/
 
 # End of https://www.gitignore.io/api/node
+
+# Custom additions
+v8-compile-cache-0
+devices.json
