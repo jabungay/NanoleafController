@@ -1,26 +1,25 @@
-//#include <FastLED.h>
+#ifndef LED_H
+#define LED_H
 
-#include <Arduino.h>
+#include "HelperFunctions.h"
+#include <string>
+#include <FastLED.h>
 
-#ifndef LED
-#define LED
+#define LED_PIN 5
+#define NUM_LEAVES 8
+#define LEDS_PER_LEAF 9
 
-// Single LED definitions (Testing Purposes)
-#define R_PIN 14
-#define G_PIN 12
-#define B_PIN 13
 
-//// Definition for WS2812B
-//#define LED_PIN 13
-//#define NUM_LEAVES 9  // 6 LEDs per leaf
-//
-//CRGB leds[NUM_LEAVES * 6]; // 6 LEDs per leaf
 
-int ledControl (String data);
+void setupLED();
 
-int brightnessControl(String data);
+// Fades between current and desired colour
+int setColour(String data);
 
-// Takes an RGB colour code and changes the LED to it
-int colourControl(String data);
+// Set the global brightness
+int setBrightness(String data);
+
+// Toggle all lights
+int toggleAll(String data);
 
 #endif
