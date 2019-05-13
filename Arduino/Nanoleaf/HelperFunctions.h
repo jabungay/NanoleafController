@@ -7,4 +7,7 @@
 // and the expected number of variables
 void seperateData(String data, String* arr, int arrLen);
 
+// Function to ping the device, ensuring it's available
+int ping(String data);
+
 #endif

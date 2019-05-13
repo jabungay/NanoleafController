@@ -33,6 +33,8 @@ void setup(void)
 
   setupLED();
 
+
+
   // Start Serial (debugging purposes)
   Serial.begin(115200);
 
@@ -44,6 +46,10 @@ void setup(void)
   rest.function("setColour", setColour);
   rest.function("setBrightness", setBrightness);
   rest.function("toggleAll", toggleAll);
+  rest.function("getRed", getRed);
+  rest.function("getGreen", getGreen);
+  rest.function("getBlue", getBlue);
+  rest.function("ping", ping);
 
   // Connect to WiFi
   WiFi.begin(ssid, password);

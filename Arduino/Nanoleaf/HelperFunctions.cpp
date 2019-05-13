@@ -16,3 +16,7 @@ void seperateData(String data, String* arr, int arrLen) {
   arr[arguments] = data.substring(lastSep + 1, data.length());
 
 }
+
+int ping(String data) {
+  return 200;
+}
