@@ -22,4 +22,7 @@ int setBrightness(String data);
 // Toggle all lights
 int toggleAll(String data);
 
+int getRed(String data);
+int getGreen(String data);
+int getBlue(String data);
 #endif

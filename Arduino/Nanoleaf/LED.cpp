@@ -105,3 +105,21 @@ int toggleAll(String data) {
 
   return 200;
 }
+
+int getRed(String data) {
+  int index = data.toInt();
+
+  return lastState[index].r;
+}
+
+int getGreen(String data) {
+  int index = data.toInt();
+
+  return lastState[index].g;
+}
+
+int getBlue(String data) {
+  int index = data.toInt();
+
+  return lastState[index].b;
+}
