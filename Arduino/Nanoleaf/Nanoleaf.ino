@@ -31,9 +31,10 @@ WiFiServer server(80);
 void setup(void)
 {
 
+  // Create emulated EEPROM, 3 bytes for each leaf
+  EEPROM.begin(NUM_LEAVES > 1 ? 3 * NUM_LEAVES : 4);
+
   setupLED();
-
-
 
   // Start Serial (debugging purposes)
   Serial.begin(115200);
@@ -65,7 +66,11 @@ void setup(void)
   Serial.println(WiFi.localIP());
 
   for (int i = 0; i < NUM_LEAVES; i++) {
-    setColour("128,128,128," + String(i) + ",1");
+    int r = EEPROM.read(i * 3);
+    int g = EEPROM.read(i * 3 + 1);
+    int b = EEPROM.read(i * 3 + 2);
+    String c = String(r) + "," + String(g) + "," + String(b);
+    setColour(c + "," + String(i) + ",0");
   }
 
 }

@@ -1,7 +1,6 @@
 #include "LED.h"
 
 CRGB leds[NUM_LEAVES * LEDS_PER_LEAF];
-CRGB lastState[NUM_LEAVES];
 
 bool panelOn = true;
 
@@ -15,6 +14,7 @@ int setColour(String data) {
 
   int index = argList[3].toInt();
   int save  = argList[4].toInt();
+
 
   float steps = 100;       // How many steps to make to fade the colours
   float fadeTime = 50;  // How long (in ms) the fade should take
@@ -30,18 +30,17 @@ int setColour(String data) {
   float newGreen = argList[1].toInt();
   float newBlue  = argList[2].toInt();
 
+
   // If we get here and the panel is set as off, set it as on before continuing
   if (save && !panelOn) {
     panelOn = true;
-    for (int i = 0; i < NUM_LEAVES; i++) {
-      lastState[i] = CRGB(0, 0, 0);
-    }
+    clearColours();
   }
 
   // Only save the previous values if requested
   // (used to restore color after toggleAll())
   if (save) {
-    lastState[index] = CRGB(newRed, newGreen, newBlue);
+    writeColour(index, CRGB(newRed, newGreen, newBlue));
   }
 
   // How much to change each colour on each step
@@ -61,6 +60,10 @@ int setColour(String data) {
     FastLED.show();
     FastLED.delay(timePerStep);
   }
+
+  byte r = newRed;
+  byte g = newGreen;
+  byte b = newBlue;
 }
 
 int setBrightness(String data) {
@@ -76,7 +79,9 @@ int toggleAll(String data) {
     // When turning off, do it backwards
     for (int i = (NUM_LEAVES - 1); i > -1; i--) {
 
-      bool isOn = lastState[i].r || lastState[i].g || lastState[i].b;
+      // Read the colour from EEPROM
+      CRGB c = readColour(i);
+      bool isOn = c.r || c.g || c.b;
 
       // Only turn off panels that aren't already off
       if(isOn) {
@@ -88,9 +93,12 @@ int toggleAll(String data) {
 
     for (int i = 0; i < NUM_LEAVES; i++) {
 
-      float red   = lastState[i].r;
-      float green = lastState[i].g;
-      float blue  = lastState[i].b;
+      // Read the colour from EEPROM
+      CRGB c = readColour(i);
+      
+      float red   = c.r;
+      float green = c.g;
+      float blue  = c.b;
 
       bool isOn = red || green || blue;
 
@@ -109,17 +117,17 @@ int toggleAll(String data) {
 int getRed(String data) {
   int index = data.toInt();
 
-  return lastState[index].r;
+  return readColour(index).r;
 }
 
 int getGreen(String data) {
   int index = data.toInt();
 
-  return lastState[index].g;
+  return readColour(index).g;
 }
 
 int getBlue(String data) {
   int index = data.toInt();
 
-  return lastState[index].b;
+  return readColour(index).b;
 }

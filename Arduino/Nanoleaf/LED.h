@@ -2,13 +2,11 @@
 #define LED_H
 
 #include "HelperFunctions.h"
-#include <string>
-#include <FastLED.h>
+
 
 #define LED_PIN 5
 #define NUM_LEAVES 8
 #define LEDS_PER_LEAF 9
-
 
 
 void setupLED();
