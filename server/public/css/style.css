@@ -126,6 +126,13 @@ a {
   fill: #007c10;
 }
 
-.triHolder {
+.triContainer{
+  margin-left: auto;
+  margin-right: auto;
   padding: 5px 5px;
+}
+
+.triHolder {
+  display: block;
+  margin: auto;
 }
