@@ -11,7 +11,19 @@ app.use(express.urlencoded());
 
 // node-aREST
 var rest = require("arest")(app);
-rest.addDevice('http','192.168.2.83');
+
+// Add leaves specified in devices.json
+var fileName = './devices.json';
+var file = fs.readFileSync(fileName, 'utf8');
+leafData = JSON.parse(file);
+
+var leafQuantity = leafData.leaf_quantity;
+
+for (var i = 0; i < leafQuantity; i++) {
+  var leaf = "leaf" + i;
+  var ip = leafData[leaf].location;
+  rest.addDevice('http',ip);
+}
 
 app.get('/', (req, res) => {
   res.render('index', {
@@ -33,6 +45,7 @@ app.get('/get-json', (req, res) => {
   jsonData = JSON.parse(file);
   res.send(jsonData);
 
+  console.log(jsonData.leaf_quantity);
   res.end();
 });
 
