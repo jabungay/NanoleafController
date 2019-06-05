@@ -9,21 +9,11 @@ function getJSONFile(fileName) {
       }
     });
   });
-
 }
 
-function length(JSONObj) {
-  return Object.keys(JSONObj).length;
-}
 
-function test() {
-  getJSONFile('devices.json').then(function(response) {
-    console.log(response, length(response));
-  }, function(error) {
-    console.log('fail!');
-  });
-}
-
+// Make sure the client is still available
+// TODO: regularly ping the client to make sure it's still alive
 function pingLeaf(leaf) {
   return new Promise(function(resolve, reject) {
     $.get(leaf + '/ping', function(json_data) {
