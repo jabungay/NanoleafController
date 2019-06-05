@@ -1,17 +1,10 @@
 extends default.pug
 
 block content
-  div.main
-    svg.triHolder#triHolder( width="100" height="100")
-      polygon.leafBuilderUnclicked#tri7(points="50,0 150,0 100,86.6")
-      polygon.leafBuilderUnclicked#tri6(points="50,0 0,86.6 100,86.6")
-      polygon.leafBuilderUnclicked#tri5(points="50,173.2 0,86.6 100,86.6")
-      polygon.leafBuilderUnclicked#tri4(points="50,173.2 150,173.2 100,86.6")
-      polygon.leafBuilderUnclicked#tri3(points="50,173.2 150,173.2 100,259.8")
-      polygon.leafBuilderUnclicked#tri2(points="200,259.8 150,173.2 100,259.8")
-      polygon.leafBuilderUnclicked#tri1(points="200,259.8 150,346.4 100,259.8")
-      polygon.leafBuilderUnclicked#tri0(points="50,346.4 150,346.4 100,259.8")
-      
+  div.main#main
+    div.triContainer
+      svg.triHolder#triHolder( width="100" height="100")
+
     p Color: 
     input(type="color" id="color")
 
@@ -19,5 +12,7 @@ block content
     
     button(onclick="toggleAllLeaves()") Toggle Lights
     
+    input(type="range" min="1" max="255" value="50" id="brightness")
+      
 append endScripts
   script(src='/js/nanoleaf.js')
