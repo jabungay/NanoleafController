@@ -15,12 +15,16 @@ void setupLED();
 int setColour(String data);
 
 // Set the global brightness
-int setBrightness(String data);
+int setBrightness(String brightness);
+
+// Change all panels based on a certain
+// profile (stored on the server)
+int setProfile(String data);
 
 // Toggle all lights
 int toggleAll(String data);
 
-int getRed(String data);
-int getGreen(String data);
-int getBlue(String data);
+int getRed(String index);
+int getGreen(String index);
+int getBlue(String index);
 #endif

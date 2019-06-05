@@ -4,9 +4,8 @@ CRGB leds[NUM_LEAVES * LEDS_PER_LEAF];
 
 bool panelOn = true;
 
-void setupLED() {
-  FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEAVES * 9);
-}
+// Called in setup(), here so it can access NUM_LEAVES
+void setupLED() { FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEAVES * 9); }
 
 int setColour(String data) {
   String argList[5]; // red, green, blue, index, save
@@ -15,15 +14,14 @@ int setColour(String data) {
   int index = argList[3].toInt();
   int save  = argList[4].toInt();
 
-
-  float steps = 100;       // How many steps to make to fade the colours
-  float fadeTime = 50;  // How long (in ms) the fade should take
+  float steps       = 100;        // How many steps to make to fade the colours
+  float fadeTime    = 50;         // How long (in ms) the fade should take
   float timePerStep = fadeTime / steps;
 
   // Determine last colours to fade from them
-  float oldRed   = leds[index * LEDS_PER_LEAF].r;
-  float oldGreen = leds[index * LEDS_PER_LEAF].g;
-  float oldBlue  = leds[index * LEDS_PER_LEAF].b;
+  float red   = leds[index * LEDS_PER_LEAF].r;
+  float green = leds[index * LEDS_PER_LEAF].g;
+  float blue  = leds[index * LEDS_PER_LEAF].b;
 
   // New colours
   float newRed   = argList[0].toInt();
@@ -39,23 +37,22 @@ int setColour(String data) {
 
   // Only save the previous values if requested
   // (used to restore color after toggleAll())
-  if (save) {
-    writeColour(index, CRGB(newRed, newGreen, newBlue));
-  }
+  if (save) { writeColour(index, CRGB(newRed, newGreen, newBlue)); }
 
   // How much to change each colour on each step
-  float diffRed   = (newRed   - oldRed)   / steps;
-  float diffGreen = (newGreen - oldGreen) / steps;
-  float diffBlue  = (newBlue  - oldBlue)  / steps;
+  float diffRed   = (newRed   - red)   / steps;
+  float diffGreen = (newGreen - green) / steps;
+  float diffBlue  = (newBlue  - blue)  / steps;
+
 
   for(int i = 0; i < steps; i++) {
 
-    oldRed += diffRed;
-    oldGreen += diffGreen;
-    oldBlue += diffBlue;
+    red   += diffRed;
+    green += diffGreen;
+    blue  += diffBlue;
 
     for(int j = index * LEDS_PER_LEAF; j < LEDS_PER_LEAF * (index + 1); j++) {
-      leds[j] = CRGB(oldRed, oldGreen, oldBlue);
+      leds[j] = CRGB(red, green, blue);
     }
     FastLED.show();
     FastLED.delay(timePerStep);
@@ -66,10 +63,36 @@ int setColour(String data) {
   byte b = newBlue;
 }
 
-int setBrightness(String data) {
-  int newBrightness = data.toInt();
-  Serial.println(newBrightness);
+// Change the brightness of the entire panel
+int setBrightness(String brightness) {
+  int newBrightness = brightness.toInt();
+
   FastLED.setBrightness(newBrightness);
+  FastLED.show();
+
+  // Brightness is stored at the end of the EEPROM
+  int brightnessAddr = EEPROM.length() - 1;
+
+  // Only write new brightness if it acutally changed
+  if (EEPROM.read(brightnessAddr) != newBrightness) {
+    EEPROM.write(brightnessAddr, newBrightness);
+    EEPROM.commit();
+  }
+
+  return 200;
+}
+
+int setProfile(String data) {
+  // There should be an R, G, and B for each panel
+  int length = NUM_LEAVES * 3;
+
+  String argList[length];
+  seperateData(data, argList, length);
+
+  for (int i = 0; i < length / 3; i++) {
+    String colour = argList[i * 3] + "," + argList[i * 3 + 1] + "," + argList[i * 3 + 2];
+    setColour(colour + "," + String(i) + ",1");
+  }
 }
 
 int toggleAll(String data) {
@@ -95,7 +118,7 @@ int toggleAll(String data) {
 
       // Read the colour from EEPROM
       CRGB c = readColour(i);
-      
+
       float red   = c.r;
       float green = c.g;
       float blue  = c.b;
@@ -114,20 +137,9 @@ int toggleAll(String data) {
   return 200;
 }
 
-int getRed(String data) {
-  int index = data.toInt();
+// Send colours to the server
+int getRed(String index)   { return readColour(index.toInt()).r; }
 
-  return readColour(index).r;
-}
+int getGreen(String index) { return readColour(index.toInt()).g; }
 
-int getGreen(String data) {
-  int index = data.toInt();
-
-  return readColour(index).g;
-}
-
-int getBlue(String data) {
-  int index = data.toInt();
-
-  return readColour(index).b;
-}
+int getBlue(String index)  { return readColour(index.toInt()).b; }

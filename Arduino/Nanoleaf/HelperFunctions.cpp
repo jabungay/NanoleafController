@@ -22,7 +22,7 @@ int ping(String data) {
 }
 
 CRGB readColour(int addr) {
-  byte r = EEPROM.read(addr * 3);
+  byte r = EEPROM.read(addr * 3    );
   byte g = EEPROM.read(addr * 3 + 1);
   byte b = EEPROM.read(addr * 3 + 2);
 
@@ -34,33 +34,24 @@ void writeColour(int addr, CRGB newColour) {
   // To minmize write cycles, only write when the value actually changes
   CRGB currentColour = readColour(addr);
 
-  String wrote = "";
-
   if (currentColour.r != newColour.r) {
     byte r = newColour.r;
     EEPROM.write(addr * 3, r);
-
-    wrote += "r ";
   }
   if (currentColour.g != newColour.g) {
     byte g = newColour.g;
     EEPROM.write(addr * 3 + 1, g);
-
-    wrote += "g ";
   }
   if (currentColour.b != newColour.b) {
     byte b = newColour.b;
     EEPROM.write(addr * 3 + 2, b);
-
-    wrote += "b ";
   }
   EEPROM.commit();
-
-  Serial.println("Wrote " + wrote + "to EEPROM");
 }
 
 void clearColours() {
-  for (int i = 0; i < EEPROM.length(); i++) {
+  // Don't want to clear the brightness
+  for (int i = 0; i < EEPROM.length() - 1; i++) {
     EEPROM.write(i, 0);
   }
   EEPROM.commit();
