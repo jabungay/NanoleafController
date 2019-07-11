@@ -3,14 +3,25 @@ const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody }          = require('express-validator/filter');
 const fs = require('fs')
 
-const app  = express();
+// Use jQuery
+var jsdom = require("jsdom");
+const { JSDOM } = jsdom;
+const { window } = new JSDOM();
+const { document } = (new JSDOM('')).window;
+global.document = document;
+var $ = jQuery = require('jquery')(window);
+
+const app = express();
 
 app.set('view engine', 'pug');
 app.use(express.static(__dirname + '/public'));
-app.use(express.urlencoded());
 
 // node-aREST
 var rest = require("arest")(app);
+
+// Hue bridge location and API key
+const hueBridgeIP = "192.168.2.73";
+const hueAPIKey   = "ZuyFnRxHZz28cLcFcpzwWjPJ2Uy4utJzaIYarWcO";
 
 // Add leaves specified in devices.json
 var fileName = './devices.json';
@@ -83,5 +94,43 @@ app.post('/submit-device', (req, res) => {
 });
 
 const server = app.listen(7000, () => {
-  console.log(`Express running → PORT ${server.address().port}`);
+  console.log(`Nanoleaf server running → PORT ${server.address().port}`);
 });
+
+// Use to control Panel with Hue dimmer switch
+// TODO: make the IP not constant
+var lastState = undefined;
+
+window.setInterval(hueToNanoleaf,1000);
+
+// Monitor Hue API to toggle panel with dimmer switch
+function hueToNanoleaf() {
+  pingSwitch().then(function(currentState) {
+    // Only toggle if the state actually changed
+     if (lastState != undefined && (currentState.state.lastupdated != lastState.state.lastupdated)) {
+       // Event 1001 -> ON button is held
+       if (currentState.state.buttonevent == 1001) {
+         $.get('http://192.168.2.83/changeState?params=on', function(json_data) {
+         });
+         // Event 4001 -> OFF button is held
+       } else if (currentState.state.buttonevent == 4001) {
+         $.get('http://192.168.2.83/changeState?params=off', function(json_data) {
+         });
+       }
+      }
+     lastState = currentState;
+  });
+}
+
+// Recieve switch information from the Hue bridge
+function pingSwitch() {
+  return new Promise(function(resolve,reject) {
+    $.get("http://" + hueBridgeIP + "/api/" + hueAPIKey + "/sensors/12", function(json_data) {
+      if (json_data != undefined) {
+        resolve(json_data);
+      } else {
+        reject(json_data);
+      }
+    });
+  });
+}
