@@ -12,14 +12,17 @@
  ************************/
 
 // Import required libraries
-#include "ESP8266WiFi.h"
+#include <ESP8266WiFi.h>
+#include <PubSubClient.h>
 #include <aREST.h>
 #include "HelperFunctions.h"
 #include "LED.h"
 
+
 // Create aREST instance
 aREST rest = aREST();
 
+char* device_id = "F7q1KK";
 
 // WiFi parameters
 const char* ssid = "cooze";
@@ -40,18 +43,19 @@ void setup(void)
   Serial.begin(115200);
 
   // Give name and ID to device
-  rest.set_id("1");
+  rest.set_id(device_id);
   rest.set_name("nanoleaf_1");
 
   // Functions exposed to rest api
-  rest.function("setColour"    , setColour    );
-  rest.function("setBrightness", setBrightness);
-  rest.function("setProfile"   , setProfile   );
-  rest.function("toggleAll"    , toggleAll    );
-  rest.function("getRed"       , getRed       );
-  rest.function("getGreen"     , getGreen     );
-  rest.function("getBlue"      , getBlue      );
-  rest.function("ping"         , ping         );
+  rest.function("setColour"       , setColour        );
+  rest.function("setBrightness"   , setBrightness    );
+  rest.function("changeBrightness", changeBrightness );
+  rest.function("setProfile"      , setProfile       );
+  rest.function("changeState"     , changeState      );
+  rest.function("getRed"          , getRed           );
+  rest.function("getGreen"        , getGreen         );
+  rest.function("getBlue"         , getBlue          );
+  rest.function("ping"            , ping             );
 
   // Connect to WiFi
   WiFi.begin(ssid, password);
@@ -81,13 +85,14 @@ void setup(void)
 }
 
 void loop() {
+
   // Handle REST calls
-  WiFiClient client = server.available();
-  if (!client) {
+  WiFiClient clientLocal = server.available();
+  if (!clientLocal) {
     return;
   }
-  while (!client.available()) {
+  while (!clientLocal.available()) {
     FastLED.delay(1);
   }
-  rest.handle(client);
+  rest.handle(clientLocal);
 }
