@@ -4,6 +4,7 @@ CRGB leds[NUM_LEAVES * LEDS_PER_LEAF];
 
 bool panelOn = true;
 
+
 // Called in setup(), here so it can access NUM_LEAVES
 void setupLED() { FastLED.addLeds<WS2812, LED_PIN, GRB>(leds, NUM_LEAVES * 9); }
 
@@ -65,14 +66,15 @@ int setColour(String data) {
 
 // Change the brightness of the entire panel
 int setBrightness(String brightness) {
+
+  // Brightness is stored at the end of the EEPROM
+  int brightnessAddr = EEPROM.length() - 1;
+  
   int newBrightness = brightness.toInt();
 
   FastLED.setBrightness(newBrightness);
   FastLED.show();
-
-  // Brightness is stored at the end of the EEPROM
-  int brightnessAddr = EEPROM.length() - 1;
-
+  
   // Only write new brightness if it acutally changed
   if (EEPROM.read(brightnessAddr) != newBrightness) {
     EEPROM.write(brightnessAddr, newBrightness);
@@ -82,9 +84,54 @@ int setBrightness(String brightness) {
   return 200;
 }
 
+
+int changeBrightness(String amount) {
+
+    // Brightness is stored at the end of the EEPROM
+    int brightnessAddr = EEPROM.length() - 1;
+
+    float steps       = 100;        // How many steps to make to fade the brightness
+    float fadeTime    = 50;         // How long (in ms) the fade should take
+    float timePerStep = fadeTime / steps;
+
+    // Determine the amount to brighten in 256ths
+    float change = (amount.toInt() / 100.0) * 256;
+
+    // Retrieve current brightness from EEPROM
+    float currentBrightness = EEPROM.read(brightnessAddr);
+
+    float diff = change / steps;
+    
+    for (int i = 0; i < steps; i++) {
+      currentBrightness += diff;
+
+      if (currentBrightness > 255) {
+        currentBrightness = 255;
+        break;
+      } else if (currentBrightness < 5) {
+        currentBrightness = 5;
+        break;
+      }
+      
+      FastLED.setBrightness(currentBrightness);
+      FastLED.show();
+      FastLED.delay(timePerStep);
+    }
+    
+    // Only write new brightness if it acutally changed
+    if (currentBrightness != EEPROM.read(brightnessAddr)) {
+      EEPROM.write(brightnessAddr, currentBrightness);
+      EEPROM.commit();
+    }
+
+    return 200;
+}
+
 int setProfile(String data) {
   // There should be an R, G, and B for each panel
   int length = NUM_LEAVES * 3;
+
+  Serial.println(data);
 
   String argList[length];
   seperateData(data, argList, length);
@@ -95,8 +142,9 @@ int setProfile(String data) {
   }
 }
 
-int toggleAll(String data) {
-  if (panelOn) {
+int changeState(String data) {
+  // If we want to toggle the panel or turn it off, and it's actually on
+  if ((data == "toggle" || data == "off") && panelOn) {
     panelOn = !panelOn;
 
     // When turning off, do it backwards
@@ -111,13 +159,17 @@ int toggleAll(String data) {
         setColour("0,0,0," + String(i) + ",0");
       }
     }
-  } else {
+    // If we want to toggle the panel or turn it on, and it's actually off
+  } else if ((data == "toggle" || data == "on") && !panelOn) {
     panelOn = !panelOn;
 
     for (int i = 0; i < NUM_LEAVES; i++) {
 
       // Read the colour from EEPROM
       CRGB c = readColour(i);
+
+      // Restore brightness
+      FastLED.setBrightness(EEPROM.read(EEPROM.length() - 1));
 
       float red   = c.r;
       float green = c.g;
