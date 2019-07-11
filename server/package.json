@@ -12,7 +12,9 @@
     "express": "^4.16.3",
     "express-validator": "^5.3.1",
     "pug": "^2.0.3",
-    "arest" : "^0.3.0"
+    "arest" : "^0.3.0",
+    "jquery": "^3.4.1",
+    "jsdom": "^15.1.1"
   },
   "devDependencies": {
     "pm2": "^2.10.3"
