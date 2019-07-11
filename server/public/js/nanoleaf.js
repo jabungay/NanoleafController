@@ -3,6 +3,9 @@
 // TODO: change depending on which leaf is selected
 var currentLeaf = "nanoleaf_1";
 
+var hueBridgeIP = "192.168.2.73";
+var hueAPIKey   = "ZuyFnRxHZz28cLcFcpzwWjPJ2Uy4utJzaIYarWcO";
+
 var length = 100;
 
 // Height of an equilateral triangle is length * sqrt(3) / 2
@@ -142,8 +145,8 @@ function setLeafColour() {
 }
 
 // Directly calls toggleAll on client
-function toggleAllLeaves() {
-  $.get('nanoleaf_1/toggleAll', function(json_data) {
+function toggleAllLeaves(action = "toggle") {
+  $.get('nanoleaf_1/changeState?params=' + action, function(json_data) {
   });
 }
 
