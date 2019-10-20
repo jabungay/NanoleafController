@@ -3,8 +3,8 @@
 // TODO: change depending on which leaf is selected
 var currentLeaf = "nanoleaf_1";
 
-var hueBridgeIP = "192.168.2.73";
-var hueAPIKey   = "ZuyFnRxHZz28cLcFcpzwWjPJ2Uy4utJzaIYarWcO";
+var hueBridgeIP = "";
+var hueAPIKey   = "";
 
 var length = 100;
 
