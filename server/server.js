@@ -20,8 +20,8 @@ app.use(express.static(__dirname + '/public'));
 var rest = require("arest")(app);
 
 // Hue bridge location and API key
-const hueBridgeIP = "192.168.2.73";
-const hueAPIKey   = "ZuyFnRxHZz28cLcFcpzwWjPJ2Uy4utJzaIYarWcO";
+const hueBridgeIP = "";
+const hueAPIKey   = "";
 
 // Add leaves specified in devices.json
 var fileName = './devices.json';
