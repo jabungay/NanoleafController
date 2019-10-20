@@ -25,8 +25,8 @@ aREST rest = aREST();
 char* device_id = "F7q1KK";
 
 // WiFi parameters
-const char* ssid = "cooze";
-const char* password = "20Fathership17";
+const char* ssid = "";
+const char* password = "";
 
 // Create an instance of the server
 WiFiServer server(80);
