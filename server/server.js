@@ -20,8 +20,8 @@ app.use(express.static(__dirname + '/public'));
 var rest = require("arest")(app);
 
 // Hue bridge location and API key
-const hueBridgeIP = "";
-const hueAPIKey   = "";
+const hueBridgeIP = "192.168.2.73";
+const hueAPIKey   = "ZuyFnRxHZz28cLcFcpzwWjPJ2Uy4utJzaIYarWcO";
 
 // Add leaves specified in devices.json
 var fileName = './devices.json';
@@ -29,7 +29,6 @@ var file = fs.readFileSync(fileName, 'utf8');
 leafData = JSON.parse(file);
 
 var leafQuantity = leafData.leaf_quantity;
-
 for (var i = 0; i < leafQuantity; i++) {
   var leaf = "leaf" + i;
   var ip = leafData[leaf].location;

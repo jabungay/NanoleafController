@@ -7,12 +7,18 @@ block content
 
     p Color: 
     input(type="color" id="color")
+      
+    input(type="text" id="hue")
+    input(type="text" id="value")
 
     button(onclick="setLeafColour()") Set Colour
     
     button(onclick="toggleAllLeaves()") Toggle Lights
     
     input(type="range" min="1" max="255" value="50" id="brightness")
+      
+    div(class="square" id="color_square")
+
       
 append endScripts
   script(src='/js/nanoleaf.js')

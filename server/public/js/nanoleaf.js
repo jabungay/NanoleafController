@@ -3,8 +3,8 @@
 // TODO: change depending on which leaf is selected
 var currentLeaf = "nanoleaf_1";
 
-var hueBridgeIP = "";
-var hueAPIKey   = "";
+var hueBridgeIP = "192.168.2.73";
+var hueAPIKey   = "ZuyFnRxHZz28cLcFcpzwWjPJ2Uy4utJzaIYarWcO";
 
 var length = 100;
 
@@ -20,7 +20,21 @@ svg.setAttribute("width",  (3 * length));
 svg.setAttribute("height", (4 * height));
 
 // Determine current colours from client
-setDisplayColours(7);
+setDisplay(7);
+
+var hueInput = document.getElementById("hue");
+hueInput.addEventListener('input', hueChanged);
+
+var hue = 0;
+
+var colorSquare = document.getElementById("color_square");
+
+function hueChanged(e)
+{
+  hue = e.target.value;
+  console.log("Hue: " + e.target.value);
+  colorSquare.setAttribute("style", "background-color: hsl(" + hue + ",100%,50%)")
+}
 
 // Setup brightness slider
 var brightnessSlider = document.getElementById("brightness");
@@ -183,6 +197,45 @@ function getColour(colour, index) {
       if (json_data != undefined) {
         resolve(json_data.return_value);
       } else {
+        reject(0);
+      }
+    });
+  });
+}
+
+function setDisplay(panel)
+{
+  var hue, sat, val;
+  if (panel >= 0)
+  {
+    getHSV(panel).then(function(response)
+    {
+      var hsv = response.toString(10);
+      hue = parseInt(hsv.substring(1,4)) * 360 / 255;
+      sat = parseInt(hsv.substring(4,7));
+      val = parseInt(hsv.substring(7));
+
+      var colour = hue + ',' + sat + ',' + val;
+
+      document.getElementById("tri" + panel).style.fill = "hsl(" + hue + ", 100%, 50%" + ")";
+
+      setDisplay(panel - 1);
+    }, function(error){
+      console.log("Fail!" + panel);
+    });
+  }
+}
+
+function getHSV(index)
+{
+  return new Promise(function(resolve, reject) {
+    $.get('/' + currentLeaf + '/getHSV?params=' + index, function(json_data) {
+      if (json_data != undefined)
+      {
+        resolve(json_data.return_value);
+      }
+      else
+      {
         reject(0);
       }
     });

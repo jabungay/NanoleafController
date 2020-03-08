@@ -5,6 +5,12 @@ html, body {
   font-family: "Open Sans";
 }
 
+.square {
+  height: 50px;
+  width: 50px;
+  background-color: hsl(250,100%,50%);
+}
+
 a {
   text-decoration: none;
 }
