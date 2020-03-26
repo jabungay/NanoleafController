@@ -32,7 +32,7 @@ Panel p;
 /*********************************************************************
  * Functions specifically used to interface with the REST API ********
  ********************************************************************/
- 
+
 // Seperate a comma-seperated string (required for REST) into an array of strings
 void seperateData(String data, String* arr, int arrLen) {
  int arguments = 0;
@@ -205,6 +205,7 @@ void setup(void)
   // Initialize panel object
   FastLED.addLeds<WS2812, ledPin, GRB>(leds, numTiles * ledsPerTile);
   p = Panel(numTiles, ledsPerTile, leds);
+
 }
 
 void loop() {

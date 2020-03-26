@@ -1,7 +1,7 @@
 #include "Nanoleaf.h"
 
 // Class constructor
-Tile::Tile() : _previousTile(NULL), _nextTile(NULL) { }
+Tile::Tile() : previousTile(NULL), nextTile(NULL) { }
 
 /************************
 * BEGIN META FUNCTIONS **
@@ -16,7 +16,7 @@ void Tile::Initialize(Panel * parentPanel, Tile * previous, int index, int ledsP
     previous->SetNext(this);
   }
   _index = index;
-  _previousTile = previous;
+  previousTile = previous;
   _ledArr = ledArr;
   _ledsPerTile = ledsPerTile;
 
@@ -28,20 +28,16 @@ void Tile::Initialize(Panel * parentPanel, Tile * previous, int index, int ledsP
 // Set the next pointer of the tile
 void Tile::SetNext(Tile * t)
 {
-  _nextTile = t;
+  nextTile = t;
 }
 
-
-
-
-// Calculate the point of a bezier curve at time t
-void Tile::CubicBezier(float* bP, float* P0, float* P1, float* P2, float* P3, float t)
+// Get the panel's current colour
+CHSV Tile::GetHSV()
 {
-  for(int i = 0; i < 2; i++)
-  {
-      bP[i] = pow((1 - t), 3) * P0[i] + 3 * pow((1 - t), 2) * t * P1[i] + 3 * (1 - t) * pow(t, 2) * P2[i] + pow(t, 3) * P3[i];
-  }
+  return ReadHSV(_index);
 }
+
+int Tile::GetIndex() { return _index; }
 
 /**********************
 * END META FUNCTIONS **
@@ -83,14 +79,6 @@ void Tile::SetHS(byte newHue, byte newSat, bool save)
   byte diffHue = newHue - hue;
   byte diffSat = newSat - sat;
   byte diffVal = newVal - val;
-
-  // Move the quickest way around the hue circle
-  if (diffHue >= 128)        {
-    diffHue -= 255;
-  }
-  else if (diffHue <= -128) {
-    diffHue += 255;
-  }
 
   for (int i = 0; i < steps; i++)
   {
