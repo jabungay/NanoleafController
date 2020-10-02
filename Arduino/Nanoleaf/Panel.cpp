@@ -132,7 +132,7 @@ void Panel::Propagate(Tile * reverseTile, Tile * forwardTile, CHSV c)
     Tile * nextRev = (reverseTile->previousTile) != NULL ? (reverseTile->previousTile) : NULL;
     Tile * nextFwd = (forwardTile->nextTile) != NULL ? (reverseTile->nextTile) : NULL;
 
-    Propagate(nextRev, nextFwd, c, c, false);
+   // Propagate(nextRev, nextFwd, c, c);
   }
   else
   {

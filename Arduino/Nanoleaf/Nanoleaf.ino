@@ -14,8 +14,8 @@ aREST rest = aREST();
 char* device_id = "F7q1KK";
 
 // WiFi parameters
-const char* ssid = "cooze";
-const char* password = "20Fathership17";
+const char* ssid = "Is this the Krusty Krab?";
+const char* password = "lillyiscute123";
 
 // Create an instance of the server
 WiFiServer server(80);
@@ -23,7 +23,7 @@ WiFiServer server(80);
 // Const values for panel properties
 const int numTiles    = 8;
 const int ledsPerTile = 9;
-const int ledPin      = 5;
+const int ledPin      = 15;
 
 // Other panel values
 CRGB leds[numTiles * ledsPerTile];
@@ -79,6 +79,9 @@ int REST_GetHSV(String index)
 // Set the colour of a given panel (HSV)
 int REST_SetColour(String data)
 {
+
+  Serial.println("Yo");
+  
    String argList[4]; // hue, sat, index, save
    seperateData(data, argList, 4);
 
